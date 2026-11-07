@@ -3,7 +3,7 @@
 My final-year project at Royal Holloway (BEng Computer Systems Engineering, dissertation graded 91%): two
 near-identical ESP32 transceiver nodes that send framed binary data to each other over 1 m of plastic optical
 fibre (a commercial TOSLINK cable), each with a 650 nm laser diode transmitter, a discrete photodiode receiver
-chain and a touchscreen. This repository holds the ESP32 firmware and the PCB Gerber files. The design and the
+chain and a touchscreen. This repository holds the ESP32 firmware, two schematics, the PCB Gerber files and the 3D-printed fibre adapters. The design and the
 measurements are written up in the dissertation; the main results are summarised below.
 
 ## At a glance
@@ -64,6 +64,8 @@ without a frequency counter or logic analyser.
 | `04_receiver_frequency_counter` | Edge counting on the comparator output with an interrupt, by count and by period |
 | `05_bpw34_analog_live_monitor`, `06_comparator_digital_monitor` | Photodiode level on the ADC, and the comparator output as a digital input |
 | `07_bluetooth_a2dp_i2s_test` | Bluetooth A2DP into I2S for the audio path |
+| `09_first_oled_hello_transmitter` | An early transmitter: a button press sends a 1111 preamble then "HELLO" most significant bit first at 250 ms per bit, with status on an SH1106 OLED |
+| `10_audio_over_laser_variant` | A larger version of the integrated firmware with two analogue audio modes: Bluetooth audio mixed to mono and sent as the laser's PWM duty (50 kHz carrier, duty capped at 40%, updated at 8 kHz), and a receive mode that samples the photodiode at 8 kHz, removes the DC level and plays it through the I2S amplifier. Its binary mode is set to a nominal 8 µs bit period. None of the measurements above were made with this sketch |
 
 The integrated firmware runs the link at a 750 µs bit period, about 1.3 kbps, which is enough for interactive
 text between the touchscreens. The higher-rate characterisation and the 1,000-packet runs described above used
@@ -97,6 +99,20 @@ silkscreen at the reference voltage and the comparator output. Two earlier recei
 broken trace on the hysteresis return, and a ground routing error that destroyed a TLV3501 at power-up), and
 those failures are why the final layout has explicit hand-checked ground paths and test points at every
 analogue node.
+
+`hardware/schematics/` holds two earlier schematics that show how the design developed:
+
+- `system_schematic_2026-02-14.png`: the whole node as I drew it in February 2026: the ESP32 DevKit, the TFT
+  touchscreen, a MAX98357A I2S amplifier and speaker, and the KY-008 laser switched by a 2N2222A through a 10 kΩ
+  base resistor. At that stage the receiver was just the BPW34 with a 47 kΩ load resistor.
+- `receiver_tia_2026-03-11.png`: the transimpedance receiver as drawn in March 2026, with the BPW34 into an OPA356
+  (22 kΩ feedback with 1 pF) and a TLV3501 comparator driving GPIO34 through 100 Ω. The final board kept the same
+  chain with the changes listed at the top (2.2 pF feedback capacitor, 2.0 V reference with hysteresis).
+
+`hardware/3d-printed/` holds the adapters that keep the fibre ends against the laser and the photodiode:
+`bpw34_adapter_final.stl` (the photodiode holder and its clip), `final_adapter.stl` (a holder with a round port
+for the fibre end) and `laser_adapter_v3.step` (the third version of the laser adapter, as an editable STEP
+model).
 
 ## Limitations and next steps
 
