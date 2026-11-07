@@ -3,7 +3,8 @@
 My final-year project at Royal Holloway (BEng Computer Systems Engineering, dissertation graded 91%): two
 near-identical ESP32 transceiver nodes that send framed binary data to each other over 1 m of plastic optical
 fibre (a commercial TOSLINK cable), each with a 650 nm laser diode transmitter, a discrete photodiode receiver
-chain and a touchscreen. This repository holds the ESP32 firmware, two schematics, the PCB Gerber files and the 3D-printed fibre adapters. The design and the
+chain and a touchscreen. This repository holds the ESP32 firmware, two schematics, the Gerber files for the final PCB and five earlier
+layouts, and the 3D-printed fibre adapters. The design and the
 measurements are written up in the dissertation; the main results are summarised below.
 
 ## At a glance
@@ -99,6 +100,21 @@ silkscreen at the reference voltage and the comparator output. Two earlier recei
 broken trace on the hysteresis return, and a ground routing error that destroyed a TLV3501 at power-up), and
 those failures are why the final layout has explicit hand-checked ground paths and test points at every
 analogue node.
+
+![Final board, top copper red and bottom copper blue](hardware/final-board.png)
+
+`hardware/earlier-boards/` holds the Gerbers of the layouts that came before the final board, as exported from
+EasyEDA, and [`board-revisions.png`](hardware/earlier-boards/board-revisions.png) draws them side by side:
+
+| Folder | Board |
+|---|---|
+| `2026-02-14_transceiver_v2` | Revision 2 of the single-node layout, built around the touchscreen, the ESP32, the speaker, the laser and the BPW34 |
+| `2026-03-08_speaker_on_pcb` | A larger node board with the speaker mounted on the PCB and ground pours on both layers |
+| `2026-04-22_draft1` | A draft with the ESP32 headers and the receiver section beside them |
+| `receiver_breakout_tia_comparator` | A small breakout carrying the photodiode, transimpedance amplifier and comparator on their own |
+| `receiver_breakout_tia_new_divider` | A second receiver breakout with a changed reference divider |
+
+The two receiver breakouts were exported again on 31 May 2026, so their folders carry no design date.
 
 `hardware/schematics/` holds two earlier schematics that show how the design developed:
 
